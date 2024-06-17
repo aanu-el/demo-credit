@@ -15,6 +15,8 @@
     "@types/jsonwebtoken": "^9.0.6",
     "@types/knex": "^0.16.1",
     "@types/node": "^20.14.2",
+    "@types/random": "^3.0.1",
+    "@types/uuid": "^9.0.8",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },
@@ -25,6 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
     "mysql2": "^3.10.1",
+    "random": "^4.1.0",
     "uuid": "^10.0.0"
   }
 }
