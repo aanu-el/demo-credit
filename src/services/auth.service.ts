@@ -5,7 +5,7 @@ require('dotenv').config();
 
 import db from '../config/db.config';
 import { User } from '../db/models/users.model';
-import { generateWallet } from '../utils/services_helper.utils';
+import { generateWallet } from '../utils/services_helper.util';
 
 
 const SECRET_KEY: any = process.env.SECRET_KEY;
