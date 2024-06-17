@@ -14,7 +14,7 @@ export const generateWallet = async (userData: any): Promise<Wallet> => {
         account_name: account_name,
         account_number: account_number,
         status: "active",
-        account_balance: "0"
+        account_balance: 0
     }
     const [newWallet] = await db<Wallet>('wallets').insert(wallet).returning('*');
     return newWallet;

@@ -12,7 +12,6 @@ export async function up(knex: Knex): Promise<void> {
         table.string('email').notNullable().unique();
         table.string('password').notNullable();
         table.enu('status', ['active', 'pending', 'deactivated']);
-        table.integer('wallet_id').nullable();
         table.timestamps(true, true);
       });
 }
