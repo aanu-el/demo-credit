@@ -5,7 +5,7 @@ import db from '../config/db.config';
 import { User } from '../db/models/users.model';
 import { generateWallet } from '../utils/services_helper.util';
 
-import { hashPassword, comparePassword, generateToken } from '../utils/auth.util';
+import { hashPassword, comparePassword, generateToken, checkKarmaList } from '../utils/auth.util';
 
 
 export const signup = async (userData: User): Promise<User> => {
@@ -14,7 +14,12 @@ export const signup = async (userData: User): Promise<User> => {
   if (userLookup) {
     throw new Error('User exists! Please sign in');
   }
+  
   // check if the user is on karma list
+  const karmaList = await checkKarmaList(userData.email)
+  if (karmaList.status === true) {
+    throw new Error('User is blacklisted')
+  }
 
   // generate user uuid
   const user_uuid = uuidv4();

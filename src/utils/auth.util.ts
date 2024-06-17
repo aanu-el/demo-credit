@@ -1,5 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import axios from 'axios';
+
+require('dotenv').config();
 
 const SECRET_KEY: any = process.env.SECRET_KEY;
 
@@ -19,3 +22,23 @@ export const getUserFromToken = (token: any): any => {
     const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
     return decoded.user
 };
+
+export const checkKarmaList = async (param: any): Promise<any> => {
+    let API_URL;
+    if (param) {
+        API_URL = `https://adjutor.lendsqr.com/v2/verification/karma/${param}`;
+    } else {
+        API_URL = "https://adjutor.lendsqr.com/v2/verification/karma/0zspgifzbo.ga"
+    }
+    const ADJUTOR_API_TOKEN = process.env.ADJUTOR_API_TOKEN
+    const response = await axios.get(API_URL, {
+        headers: {
+            'Authorization': `Bearer ${ADJUTOR_API_TOKEN}`
+        }
+    })
+    if (response.status === 200) {
+        return { status: true, "message": "User Blacklisted"}
+    } else {
+        return { status: false, "message": "User is not blacklisted"}
+    }
+}
