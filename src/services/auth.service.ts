@@ -8,15 +8,18 @@ import { generateWallet } from '../utils/services_helper.util';
 import { hashPassword, comparePassword, generateToken, checkKarmaList } from '../utils/auth.util';
 
 
-export const signup = async (userData: User): Promise<User> => {
+export const signup = async (userData: User): Promise<any> => {
   //check if the user exists already by email
-  const userLookup = await db<User>('users').where({ email: userData.email }).first();
-  if (userLookup) {
+
+  const userLookup = await db<User>('users').where({ email: userData.email });
+
+  if (userLookup.length > 0) {
     throw new Error('User exists! Please sign in');
   }
-  
+
   // check if the user is on karma list
   const karmaList = await checkKarmaList(userData.email)
+
   if (karmaList.status === true) {
     throw new Error('User is blacklisted')
   }
@@ -31,12 +34,17 @@ export const signup = async (userData: User): Promise<User> => {
   const status = "active";
 
   // generate account number
-  const account_number = await generateWallet(userData)
+  await generateWallet(userData, user_uuid)
 
   // save into db
-  const [newUser] = await db<User>('users').insert({ ...userData, user_uuid: user_uuid, password: hashedPassword, status: status, wallet_id: account_number.id }).returning('*');
+  try {
+    const [newUser] = await db<User>('users').insert({ ...userData, user_uuid: user_uuid, password: hashedPassword, status: status }).returning('*');
 
-  return newUser;
+    return { status: "success", userId: newUser };
+  } catch (error: any) {
+    throw error;
+  }
+
 };
 
 export const signin = async (email: string, password: string): Promise<string> => {

@@ -52,13 +52,13 @@ export const transfer = async (params: IntraFundsTransferDto): Promise<any> => {
 
     try {
         const fromUser = await txn<Wallet>('wallets')
-            .join('users', 'wallets.user_uuid', 'users.uuid')
+            .join('users', 'wallets.user_uuid', 'users.user_uuid')
             .select('wallets.*', 'users.first_name', 'users.last_name', 'users.email')
             .where({ 'wallets.user_uuid': fromUserUuid })
             .first();
 
         const toUser = await txn<Wallet>('wallets')
-            .join('users', 'wallets.user_uuid', 'users.uuid')
+            .join('users', 'wallets.user_uuid', 'users.user_uuid')
             .select('wallets.*', 'users.first_name', 'users.last_name', 'users.email')
             .where({ 'wallets.user_uuid': toUserUuid })
             .first();
@@ -66,6 +66,9 @@ export const transfer = async (params: IntraFundsTransferDto): Promise<any> => {
         if (!fromUser || !toUser) {
             throw new Error('User not found');
         }
+
+        fromUser.account_balance = Number(fromUser.account_balance)
+        toUser.account_balance = Number(toUser.account_balance)
 
         if (fromUser.account_balance < amount) {
             throw new Error('Insufficient balance');
@@ -99,9 +102,12 @@ export const transfer = async (params: IntraFundsTransferDto): Promise<any> => {
             current_balance: toUser.account_balance + amount
         }
 
+        const txn_ref = `LEND|${uuidv4()}`;
+
         // Record the debit transaction for the sender
         await txn<Transaction>('transactions').insert({
             user_uuid: fromUserUuid,
+            txn_ref: txn_ref,
             txn_type: 'debit',
             account_balance: fromUser.account_balance - amount,
             logs: JSON.stringify(debitLog)
@@ -110,7 +116,7 @@ export const transfer = async (params: IntraFundsTransferDto): Promise<any> => {
         // Record the credit transaction for the receiver
         await txn<Transaction>('transactions').insert({
             user_uuid: toUserUuid,
-            txn_ref: `LEND|${uuidv4()}`,
+            txn_ref: txn_ref,
             txn_type: 'credit',
             account_balance: toUser.account_balance + amount,
             logs: JSON.stringify(creditLog)
@@ -138,10 +144,12 @@ export const withdraw = async (params: WithdrawFundsDto): Promise<any> => {
     try {
         // Check user's balance
         const user = await txn<Wallet>('wallets')
-            .join('users', 'wallets.user_uuid', 'users.uuid')
+            .join('users', 'wallets.user_uuid', 'users.user_uuid')
             .select('wallets.*', 'users.first_name', 'users.last_name', 'users.email')
             .where({ 'wallets.user_uuid': user_uuid })
             .first();
+
+        user.account_balance = Number(user.account_balance)
 
         if (user.account_balance < amount) {
             throw new Error('Insufficient balance');
@@ -195,12 +203,14 @@ export const fundUserWallet = async (params: WithdrawFundsDto): Promise<any> => 
     try {
         // Check user's balance
         const user = await txn<Wallet>('wallets')
-            .join('users', 'wallets.user_uuid', 'users.uuid')
+            .join('users', 'wallets.user_uuid', 'users.user_uuid')
             .select('wallets.*', 'users.first_name', 'users.last_name', 'users.email')
             .where({ 'wallets.user_uuid': user_uuid })
             .first();
 
         // Add amount from user's balance
+        user.account_balance = Number(user.account_balance)
+
         await txn<Wallet>('wallets')
             .where({ user_uuid: user_uuid })
             .update({

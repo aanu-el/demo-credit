@@ -8,6 +8,5 @@ export type User = {
     email: string;
     password: string;
     status: any;
-    wallet_id: number;
   };
   

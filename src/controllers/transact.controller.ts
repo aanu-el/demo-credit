@@ -28,6 +28,7 @@ export const getTransactionHistory = async (req: Request, res: Response) => {
 /* Handles transfer logic between lendSqr users */
 export const intraTransfer = async (req: Request, res: Response) => {
     const { toUserUuid, amount } = req.body;
+    
     try {
         //  get user_uuid from token
         const token = req.headers.authorization?.split(' ')[1];

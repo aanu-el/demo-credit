@@ -20,7 +20,7 @@ export const generateToken = (id: any, email: string, user_uuid: string): string
 
 export const getUserFromToken = (token: any): any => {
     const decoded = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString())
-    return decoded.user
+    return decoded
 };
 
 export const checkKarmaList = async (param: any): Promise<any> => {
@@ -31,11 +31,13 @@ export const checkKarmaList = async (param: any): Promise<any> => {
         API_URL = "https://adjutor.lendsqr.com/v2/verification/karma/0zspgifzbo.ga"
     }
     const ADJUTOR_API_TOKEN = process.env.ADJUTOR_API_TOKEN
-    const response = await axios.get(API_URL, {
-        headers: {
-            'Authorization': `Bearer ${ADJUTOR_API_TOKEN}`
-        }
+
+    const resolveUrl = await fetch(API_URL, {
+        method: 'GET',
+        headers: { "Authorization":  `Bearer ${ADJUTOR_API_TOKEN}`}
     })
+    const response = await resolveUrl.json()
+
     if (response.status === 200) {
         return { status: true, "message": "User Blacklisted"}
     } else {
