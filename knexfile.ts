@@ -1,5 +1,6 @@
 import { Knex } from 'knex';
 require('dotenv').config();
+const DB_PORT: number = Number(process.env.DB_PORT)
 
 const config: { [key: string]: Knex.Config } = {
   development: {
@@ -8,8 +9,8 @@ const config: { [key: string]: Knex.Config } = {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        port: process.env.DB_PORT
+      database: process.env.DB_NAME,
+      port: DB_PORT
     },
     migrations: {
       directory: './src/migrations'
@@ -24,8 +25,8 @@ const config: { [key: string]: Knex.Config } = {
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-        database: process.env.DB_NAME,
-        port: process.env.DB_PORT
+      database: process.env.DB_NAME,
+      port: DB_PORT
     },
     migrations: {
       directory: './src/migrations'
