@@ -17,8 +17,8 @@ This is a MVP (Minimum viable product) wallet service built with Node.js and Typ
 #### Installation
 1. Clone the repository:
 ````
-git clone https://github.com/aanu-el/demo_credit.git
-cd demo_credit
+git clone https://github.com/aanu-el/demo-credit.git
+cd demo-credit
 ````
 2. Install dependencies:
 ```` 
