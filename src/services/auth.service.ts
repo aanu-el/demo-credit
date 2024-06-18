@@ -47,7 +47,7 @@ export const signup = async (userData: User): Promise<any> => {
 
 };
 
-export const signin = async (email: string, password: string): Promise<string> => {
+export const signin = async (email: string, password: string): Promise<any> => {
   const user = await db<User>('users').where({ email }).first();
   if (!user) {
     throw new Error('Invalid email or password');
