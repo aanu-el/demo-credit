@@ -81,6 +81,9 @@ Transfer funds between demo-credit users accounts.
 - POST /transact/withdraw
 Transfer funds to external accounts.
 
+#### E-R Diagram
+![alt text](<E-R diagram.png>)
+
 #### Testing
 The application uses Jest for testing. Unit tests are provided for the signup and signin controllers, as well as the transactions controller.
 ##### Running Tests
