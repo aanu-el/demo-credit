@@ -9,7 +9,7 @@ export const getProfileController = async (req: Request, res: Response) => {
         const user_uuid = await getUserFromToken(token).user_uuid;
 
         const user = await getUserProfile(user_uuid);
-        res.status(201).json(user);
+        res.status(200).json(user);
     } catch (error: any) {
         res.status(400).json({ message: error.message });
     }
