@@ -25,6 +25,10 @@ cd demo-credit
 npm install 
 ````
 3. Install MySQL and create a database for the application.
+4. Run Migrations
+````
+npm run db:dev:up
+````
 
 #### Configuration
 Create a ````.env```` file in the root of the project using the ````.env-example```` file as a template
